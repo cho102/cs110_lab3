@@ -1,0 +1,62 @@
+/* Feel free to edit CSS of body if you'd like. We provide you the light gray background color and font family in the body styling */
+/*<Cindy Ho cho102 SID:862151318*/
+
+body {
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  margin: 56px auto;
+  background-color: white;
+  max-width: 1190px;
+
+}
+
+.main_chunk {
+  max-width: 1190px;
+}
+
+/*CENTER STYLING*/
+  .center_content {
+    background-color:white;
+    margin: 20px;
+  }
+
+  .tweet_block {
+    border-bottom:1px solid #E6ECF0;
+    min-height: 51px;
+    display: flex;
+    margin-top: 10px;
+  }
+
+  .tweet_profilepic {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    margin: 0px 10px;
+  }
+
+  .tweet_info{
+    display:flex;
+  }
+
+  .tweet_name {
+    font-weight: bold;
+    margin-right: 5px;
+  }
+
+  .tweet_username{
+    color:#7f7f7f;
+    margin-right: 5px;
+  }
+
+  .tweet_time{
+    color:#7f7f7f;
+    margin-right: 5px;
+  }
+
+button {
+  padding: 5px;
+  margin: 10 px;
+}
+
+#searchBar{
+  padding: 10px;
+}
