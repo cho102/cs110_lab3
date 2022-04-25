@@ -1,13 +1,13 @@
 //master list of tweets
 const masterList = [];
-var word;
+var i = 0;
 // specify a url, in this case our web server
 function getTweets(){
     const url = "http://ec2-18-209-247-77.compute-1.amazonaws.com:3000/feed/random?q=weather";
     fetch(url).then(function(response){
       return response.json();
     }).then(function(data){
-      for(let i=0; i < Object.keys(data.statuses).length;++i){
+      if(i != Object.keys(data.statuses).length) {
         var exist = false;
         for (let j = 0; j< masterList.length; ++j){
           if(data.statuses[i].id == masterList[j].id){
@@ -16,46 +16,70 @@ function getTweets(){
           }
         }
         if (exist != true){
-          let obj = {
-            id: data.statuses[i].id,
-            text: data.statuses[i].text,
-            created_at: data.statuses[i].created_at,
-            userName: data.statuses[i].user.screen_name,
-            screenName: data.statuses[i].user.name,
-            profilePic: data.statuses[i].user.profile_image_url_https,
-            };
-            masterList.push(obj);
+          if (searchString != ""){
+            if (data.statuses[i].text.includes(searchString)){
+              console.log("search found");
+              objIn = data.statuses[i];
+              let obj = {
+                id: objIn.id,
+                text: objIn.text,
+                created_at: objIn.created_at,
+                userName: objIn.user.screen_name,
+                screenName: objIn.user.name,
+                profilePic: objIn.user.profile_image_url_https,
+                };
+                masterList.push(obj);
+                displayTweets(obj);
+            }
+            else {
+              console.log("can't be searched");
+            }
+          }
+          else{
+            console.log("no search");
+            objIn = data.statuses[i]
+              let obj = {
+                id: objIn.id,
+                text: objIn.text,
+                created_at: objIn.created_at,
+                userName: objIn.user.screen_name,
+                screenName: objIn.user.name,
+                profilePic: objIn.user.profile_image_url_https,
+                };
+                masterList.push(obj);
+                displayTweets(obj);
+          }
         }
+        ++i
+        console.log(i);
+        // console.log(masterList);
       }
-      console.log(data.statuses);
+      // console.log(data.statuses);
     }).catch(function(err){
       console.warn("Something went wrong!", err); 
     });
 }  
-getTweets();
 
 
-var printNum = 0;
+// var printNum = 0;
 
-function displayTweets(){
+function displayTweets(obj){
   // console.log(masterList[printNum]);
-  if(printNum != masterList.length){
-    if(searchString == ""){
-      var twtName = document.createElement("span");
+    var twtName = document.createElement("span");
     twtName.classList.add("tweet_name");
-    var twtNameTxt = document.createTextNode(masterList[printNum].screenName);
+    var twtNameTxt = document.createTextNode(obj.screenName);
     twtName.appendChild(twtNameTxt);
 
     var twtUserName = document.createElement("span");
     twtUserName.classList.add("tweet_username");
     var twtUserNameTag = document.createTextNode("@");
-    var twtUserNameTxt = document.createTextNode(masterList[printNum].userName);
+    var twtUserNameTxt = document.createTextNode(obj.userName);
     twtUserName.appendChild(twtUserNameTag);
     twtUserName.appendChild(twtUserNameTxt);
 
     var twtTime = document.createElement("span");
     twtTime.classList.add("tweet_time");
-    var twtTimeTxt = document.createTextNode(moment(masterList[printNum].created_at).format('MMMM DD, YYYY'));
+    var twtTimeTxt = document.createTextNode(moment(obj.created_at).format('MMMM DD, YYYY'));
     twtTime.appendChild(twtTimeTxt);
 
     var twtInfo = document.createElement("div");
@@ -66,7 +90,7 @@ function displayTweets(){
 
     var twtText = document.createElement("p");
     twtText.classList.add("tweet_text");
-    var twtTextTxt = document.createTextNode(masterList[printNum].text);
+    var twtTextTxt = document.createTextNode(obj.text);
     twtText.appendChild(twtTextTxt);
 
     var twtMain = document.createElement("div");
@@ -76,7 +100,7 @@ function displayTweets(){
 
     var twtProfilePic = document.createElement("img");
     twtProfilePic.classList.add("tweet_profilepic");
-    twtProfilePic.src = masterList[printNum].profilePic;
+    twtProfilePic.src = obj.profilePic;
 
     var twtBlock = document.createElement("div");
     twtBlock.classList.add("tweet_block");
@@ -85,76 +109,23 @@ function displayTweets(){
 
     var element = document.getElementById("tweets")
     element.prepend(twtBlock);
-    }
-    else if(masterList[printNum].text.includes(searchString)){
-      var twtName = document.createElement("span");
-      twtName.classList.add("tweet_name");
-      var twtNameTxt = document.createTextNode(masterList[printNum].screenName);
-      twtName.appendChild(twtNameTxt);
-
-      var twtUserName = document.createElement("span");
-      twtUserName.classList.add("tweet_username");
-      var twtUserNameTag = document.createTextNode("@");
-      var twtUserNameTxt = document.createTextNode(masterList[printNum].userName);
-      twtUserName.appendChild(twtUserNameTag);
-      twtUserName.appendChild(twtUserNameTxt);
-
-      var twtTime = document.createElement("span");
-      twtTime.classList.add("tweet_time");
-      var twtTimeTxt = document.createTextNode(moment(masterList[printNum].created_at).format('MMMM DD, YYYY'));
-      twtTime.appendChild(twtTimeTxt);
-
-      var twtInfo = document.createElement("div");
-      twtInfo.classList.add("tweet_info");
-      twtInfo.appendChild(twtName);
-      twtInfo.appendChild(twtUserName);
-      twtInfo.appendChild(twtTime);
-
-      var twtText = document.createElement("p");
-      twtText.classList.add("tweet_text");
-      var twtTextTxt = document.createTextNode(masterList[printNum].text);
-      twtText.appendChild(twtTextTxt);
-
-      var twtMain = document.createElement("div");
-      twtMain.classList.add("tweet_main");
-      twtMain.appendChild(twtInfo);
-      twtMain.appendChild(twtText);
-
-      var twtProfilePic = document.createElement("img");
-      twtProfilePic.classList.add("tweet_profilepic");
-      twtProfilePic.src = masterList[printNum].profilePic;
-
-      var twtBlock = document.createElement("div");
-      twtBlock.classList.add("tweet_block");
-      twtBlock.appendChild(twtProfilePic);
-      twtBlock.appendChild(twtMain);
-
-      var element = document.getElementById("tweets")
-      element.prepend(twtBlock);
-    }
-    ++printNum;
-    console.log(printNum);
-  }
-  else{
-    console.log("reached end");
-  }
 }
 
 let timer;
 window.onload = function(){
-  timer = setInterval(displayTweets,3000);
+  timer = setInterval(getTweets,3000);
 }
 
 
 function check() {
   clearInterval(timer);
   console.log("entered check")
-  console.log(printNum);
-  console.log(masterList[printNum])
+  console.log(i);
+  console.log(masterList[i])
 }
 
 function uncheck() {
-  timer = setInterval(displayTweets,5000);
+  timer = setInterval(getTweets,5000);
   console.log("entered uncheck")
 }
 
