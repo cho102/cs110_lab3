@@ -7,11 +7,11 @@ function getTweets(){
     fetch(url).then(function(response){
       return response.json();
     }).then(function(data){
-      console.log(data)
+      // console.log(data)
       for(i=0; i <=Object.keys(data.statuses).length; ++i){
-        console.log('i:', i)
-        console.log('id:', data.statuses[i].id)
-        console.log('text:', data.statuses[i].text)
+        // console.log('i:', i)
+        // console.log('id:', data.statuses[i].id)
+        // console.log('text:', data.statuses[i].text)
         var exist = false;
         for (let j = 0; j< masterList.length; ++j){
           // console.log('entered for loop')
@@ -50,8 +50,8 @@ function search(){
     return;
   }
   if (searchString != ""){
-    console.log('searchString:',searchString)
-    console.log(masterList[k].text.toLowerCase())
+    // console.log('searchString:',searchString)
+    // console.log(masterList[k].text.toLowerCase())
     var searchVal = masterList[k].text.toLowerCase()
     if (searchVal.includes(searchString)){
       console.log("search found");
@@ -129,6 +129,9 @@ window.onload = function(){
 
 function check() {
   clearInterval(timer);
+  console.log("entered check")
+  console.log(k);
+  console.log(masterList[k])
 }
 
 function uncheck() {
