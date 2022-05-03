@@ -12,6 +12,7 @@ function getTweets(){
         for (let j = 0; j< masterList.length; ++j){
           if(data.statuses[i].id == masterList[j].id){
             exist = true;
+            console.log('entered true')
             break;
           }
         }
@@ -29,16 +30,11 @@ function getTweets(){
           obj.sort_time = obj.sort_time.replace(/-/g,'')
           obj.sort_time = obj.sort_time.replace(/:/g,'')
           obj.sort_time = obj.sort_time.replace(/T/g,'')
-          // console.log('sort:', obj.sort_time)
           masterList.push(obj);
-          masterList.sort((a,b)=> b.sort_time - a.sort_time);
-          // displayTweets(obj);
+          masterList.sort((a,b)=> a.sort_time - b.sort_time);
         }
         ++i
-        // console.log(i);
-        // console.log(masterList);
       }
-      // console.log(data.statuses);
     }).catch(function(err){
       console.warn("Something went wrong!", err); 
     });
@@ -46,24 +42,26 @@ function getTweets(){
 
 var k = 0;
 function search(){
-if (searchString != ""){
-            if (masterList[k].text.includes(searchString)){
-              console.log("search found");
-              objIn = masterList[k];
-                displayTweets(objIn);
-            }
-            else {
-              console.log("can't be searched");
-            }
-          }
-          else{
-            console.log("no search");
-            objIn = masterList[k]
-                displayTweets(objIn);
-          }
+  if (searchString != ""){
+    if (masterList[k].text.includes(searchString)){
+      console.log("search found");
+      objIn = masterList[k];
+      displayTweets(objIn);
+    }
+    else {
+      console.log("can't be searched");
+    }
+  }
+  else{
+    console.log("no search");
+    objIn = masterList[k]
+    displayTweets(objIn);
+  }
+  ++k
 }
 
 function displayTweets(obj){
+  console.log(obj)
     var twtName = document.createElement("span");
     twtName.classList.add("tweet_name");
     var twtNameTxt = document.createTextNode(obj.screenName);
@@ -108,32 +106,23 @@ function displayTweets(obj){
 
     var element = document.getElementById("tweets")
     element.prepend(twtBlock);
-    ++num;
 }
 
 let timer;
 window.onload = function(){
-  for(var k=0; k < 10; ++k){
+  for(var k=0; k < 100; ++k){
     getTweets();
   }
-  timer = setInterval(displayTweets,3000);
+  console.log(masterList)
+  timer = setInterval(search,1000);
 }
 
-// 2022-04-18T17:39:42.000Z
 function check() {
   clearInterval(timer);
-  console.log("entered check")
-  console.log(masterList.length);
-  console.log('length:', masterList.length)
-  for (let j = 0; j< masterList.length; ++j){
-    console.log(masterList[j].sort_time);
-  }
-  // // console.log("sort")
-
 }
 
 function uncheck() {
-  timer = setInterval(getTweets,3000);
+  timer = setInterval(search,1000);
   console.log("entered uncheck")
 }
 
