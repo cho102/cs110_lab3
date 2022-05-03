@@ -7,9 +7,14 @@ function getTweets(){
     fetch(url).then(function(response){
       return response.json();
     }).then(function(data){
-      if(i != Object.keys(data.statuses).length) {
+      console.log(data)
+      for(i=0; i <=Object.keys(data.statuses).length; ++i){
+        console.log('i:', i)
+        console.log('id:', data.statuses[i].id)
+        console.log('text:', data.statuses[i].text)
         var exist = false;
         for (let j = 0; j< masterList.length; ++j){
+          // console.log('entered for loop')
           if(data.statuses[i].id == masterList[j].id){
             exist = true;
             console.log('entered true')
@@ -33,7 +38,6 @@ function getTweets(){
           masterList.push(obj);
           masterList.sort((a,b)=> a.sort_time - b.sort_time);
         }
-        ++i
       }
     }).catch(function(err){
       console.warn("Something went wrong!", err); 
@@ -42,8 +46,14 @@ function getTweets(){
 
 var k = 0;
 function search(){
+  if(k>masterList.length){
+    return;
+  }
   if (searchString != ""){
-    if (masterList[k].text.includes(searchString)){
+    console.log('searchString:',searchString)
+    console.log(masterList[k].text.toLowerCase())
+    var searchVal = masterList[k].text.toLowerCase()
+    if (searchVal.includes(searchString)){
       console.log("search found");
       objIn = masterList[k];
       displayTweets(objIn);
@@ -61,7 +71,7 @@ function search(){
 }
 
 function displayTweets(obj){
-  console.log(obj)
+  // console.log(obj)
     var twtName = document.createElement("span");
     twtName.classList.add("tweet_name");
     var twtNameTxt = document.createTextNode(obj.screenName);
@@ -110,10 +120,10 @@ function displayTweets(obj){
 
 let timer;
 window.onload = function(){
-  for(var k=0; k < 100; ++k){
+  // for(var k=0; k < 100; ++k){
     getTweets();
-  }
-  console.log(masterList)
+  // }
+  // console.log(masterList)
   timer = setInterval(search,1000);
 }
 
