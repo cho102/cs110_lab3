@@ -16,20 +16,41 @@ function getTweets(){
           }
         }
         if (exist != true){
-          if (searchString != ""){
-            if (data.statuses[i].text.includes(searchString)){
+          objIn = data.statuses[i]
+          let obj = {
+            id: objIn.id,
+            text: objIn.text,
+            created_at: objIn.created_at,
+            sort_time: objIn.created_at.slice(0,objIn.created_at.length-5),
+            userName: objIn.user.screen_name,
+            screenName: objIn.user.name,
+            profilePic: objIn.user.profile_image_url_https,
+            };
+          obj.sort_time = obj.sort_time.replace(/-/g,'')
+          obj.sort_time = obj.sort_time.replace(/:/g,'')
+          obj.sort_time = obj.sort_time.replace(/T/g,'')
+          // console.log('sort:', obj.sort_time)
+          masterList.push(obj);
+          masterList.sort((a,b)=> b.sort_time - a.sort_time);
+          // displayTweets(obj);
+        }
+        ++i
+        // console.log(i);
+        // console.log(masterList);
+      }
+      // console.log(data.statuses);
+    }).catch(function(err){
+      console.warn("Something went wrong!", err); 
+    });
+}
+
+var k = 0;
+function search(){
+if (searchString != ""){
+            if (masterList[k].text.includes(searchString)){
               console.log("search found");
-              objIn = data.statuses[i];
-              let obj = {
-                id: objIn.id,
-                text: objIn.text,
-                created_at: objIn.created_at,
-                userName: objIn.user.screen_name,
-                screenName: objIn.user.name,
-                profilePic: objIn.user.profile_image_url_https,
-                };
-                masterList.push(obj);
-                displayTweets(obj);
+              objIn = masterList[k];
+                displayTweets(objIn);
             }
             else {
               console.log("can't be searched");
@@ -37,34 +58,12 @@ function getTweets(){
           }
           else{
             console.log("no search");
-            objIn = data.statuses[i]
-              let obj = {
-                id: objIn.id,
-                text: objIn.text,
-                created_at: objIn.created_at,
-                userName: objIn.user.screen_name,
-                screenName: objIn.user.name,
-                profilePic: objIn.user.profile_image_url_https,
-                };
-                masterList.push(obj);
-                displayTweets(obj);
+            objIn = masterList[k]
+                displayTweets(objIn);
           }
-        }
-        ++i
-        console.log(i);
-        // console.log(masterList);
-      }
-      // console.log(data.statuses);
-    }).catch(function(err){
-      console.warn("Something went wrong!", err); 
-    });
-}  
-
-
-// var printNum = 0;
+}
 
 function displayTweets(obj){
-  // console.log(masterList[printNum]);
     var twtName = document.createElement("span");
     twtName.classList.add("tweet_name");
     var twtNameTxt = document.createTextNode(obj.screenName);
@@ -109,23 +108,32 @@ function displayTweets(obj){
 
     var element = document.getElementById("tweets")
     element.prepend(twtBlock);
+    ++num;
 }
 
 let timer;
 window.onload = function(){
-  timer = setInterval(getTweets,3000);
+  for(var k=0; k < 10; ++k){
+    getTweets();
+  }
+  timer = setInterval(displayTweets,3000);
 }
 
-
+// 2022-04-18T17:39:42.000Z
 function check() {
   clearInterval(timer);
   console.log("entered check")
-  console.log(i);
-  console.log(masterList[i])
+  console.log(masterList.length);
+  console.log('length:', masterList.length)
+  for (let j = 0; j< masterList.length; ++j){
+    console.log(masterList[j].sort_time);
+  }
+  // // console.log("sort")
+
 }
 
 function uncheck() {
-  timer = setInterval(getTweets,5000);
+  timer = setInterval(getTweets,3000);
   console.log("entered uncheck")
 }
 
